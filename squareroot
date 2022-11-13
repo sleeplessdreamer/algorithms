@@ -1,0 +1,71 @@
+/*******************************************************************************
+ * Filename: sqrt.cpp
+ * Date Completed: September 14, 2022
+ * Program Description: This program computes the square root of a double using Newton's method.
+ ******************************************************************************/
+#include <iostream>
+#include <iomanip>
+#include <cmath>
+#include <limits>
+#include <sstream>
+using namespace std;
+
+
+double sqrt(double num, double epsilon){
+	if(num < 0){
+		return numeric_limits<double>::quiet_NaN();
+	}
+	if((num == 1) | (num == 0)){
+		return num;
+	}
+
+	double lastGuess = num;
+	double nextGuess = (lastGuess + (num/lastGuess))/2;
+	while(abs(lastGuess - nextGuess) > epsilon){
+		lastGuess = nextGuess;
+		nextGuess = (lastGuess + (num/lastGuess))/2;
+	}
+	return nextGuess;
+}
+
+int main(int argc, char* argv[]){
+	double num, epsilon;
+	istringstream iss;
+
+	if(argc == 2){
+		iss.str(argv[1]);
+		if(!(iss >> num)){
+			cerr << "Error: Value argument must be a double." << endl;
+			return 1;
+		}
+		epsilon = 0.0000001;
+	}
+	else if(argc == 3){
+		iss.clear();
+		iss.str(argv[1]);
+		if(!(iss >> num)){
+			cerr << "Error: Value argument must be a double." << endl;
+			return 1;
+		}
+
+		iss.clear();
+
+		iss.str(argv[2]);
+		if(!(iss >> epsilon)){
+			cerr << "Error: Epsilon argument must be a positive double." << endl;
+			return 1;
+		}
+			if(epsilon <= 0){
+			cerr << "Error: Epsilon argument must be a positive double." << endl;
+			return 1;
+		}
+	}
+
+	else{
+		cerr << "Usage: " << argv[0] << " <value> [epsilon]" << endl;
+		return 1;
+	}
+
+	cout  << fixed << setprecision(8) << sqrt(num, epsilon) << endl;
+	return 1;
+}
